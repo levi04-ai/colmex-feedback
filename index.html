@@ -522,7 +522,7 @@ function submitFeedback() {
   btn.disabled = true;
 
   // Send to Google Sheets via URL params (works with no-cors)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySRubIeTbicqZ2toMC_d0zWuaypH6eBbX9vuTlGPSiAPtOKNT---1kF8XG02-MJZTwAw/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvtqvSE7KDbf4PX5x480zJ1_hUizjHxEYd1inEWG31cQe0YQTE1n0oh4vuJiC6OF4Wwg/exec';
   const params = new URLSearchParams();
   params.append('name', data.name || 'אנונימי');
   params.append('relevance', data.ratings.relevance || 0);
