@@ -521,13 +521,25 @@ function submitFeedback() {
   btn.textContent = 'שולח...';
   btn.disabled = true;
 
-  // Send to Google Sheets
-  fetch('https://script.google.com/macros/s/AKfycbySRubIeTbicqZ2toMC_d0zWuaypH6eBbX9vuTlGPSiAPtOKNT---1kF8XG02-MJZTwAw/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).then(() => {
+  // Send to Google Sheets via URL params (works with no-cors)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySRubIeTbicqZ2toMC_d0zWuaypH6eBbX9vuTlGPSiAPtOKNT---1kF8XG02-MJZTwAw/exec';
+  const params = new URLSearchParams();
+  params.append('name', data.name || 'אנונימי');
+  params.append('relevance', data.ratings.relevance || 0);
+  params.append('pace', data.ratings.pace || 0);
+  params.append('examples', data.ratings.examples || 0);
+  params.append('instructor', data.ratings.instructor || 0);
+  params.append('tools', data.ratings.tools || 0);
+  params.append('knowledge', data.ratings.knowledge || 0);
+  params.append('nps', data.nps || '');
+  params.append('bestSession', data.bestSession || '');
+  params.append('learned', data.learned || '');
+  params.append('deepen', data.deepen || '');
+  params.append('apply', data.apply || '');
+  params.append('notes', data.notes || '');
+
+  fetch(SCRIPT_URL + '?' + params.toString(), { mode: 'no-cors' })
+  .then(() => {
     document.getElementById('formContainer').style.display = 'none';
     document.getElementById('thankYou').style.display = 'block';
   }).catch(err => {
