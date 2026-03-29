@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>משוב סדנה | קולמקס AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: #0c1929;
+  color: #e0e8f0;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00e5a0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Form sections */
+.section {
+  background: rgba(20,35,60,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Rating questions */
+.rating-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.rating-item:last-child { border-bottom: none; }
+
+.rating-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  flex: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+  direction: ltr;
+}
+
+.stars input { display: none; }
+
+.stars label {
+  cursor: pointer;
+  font-size: 26px;
+  color: rgba(255,255,255,0.15);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.stars label:hover,
+.stars label:hover ~ label,
+.stars input:checked ~ label {
+  color: #f5a623;
+  text-shadow: 0 0 10px rgba(245,166,35,0.4);
+}
+
+/* Reverse star order for RTL clicking */
+.stars {
+  flex-direction: row-reverse;
+}
+
+.stars label:hover ~ label,
+.stars input:checked ~ label {
+  color: #f5a623;
+}
+
+/* Fix: stars should highlight from right to left */
+.star-group {
+  display: flex;
+  direction: ltr;
+  gap: 2px;
+}
+
+.star-group .star {
+  cursor: pointer;
+  font-size: 26px;
+  color: rgba(255,255,255,0.15);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.star-group .star.active {
+  color: #f5a623;
+  text-shadow: 0 0 10px rgba(245,166,35,0.4);
+}
+
+.star-group .star:hover {
+  transform: scale(1.2);
+}
+
+/* Scale question */
+.scale-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+
+.scale-btn {
+  flex: 1;
+  padding: 10px 4px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.scale-btn:hover {
+  background: rgba(0,229,160,0.1);
+  border-color: rgba(0,229,160,0.3);
+  color: #00e5a0;
+}
+
+.scale-btn.active {
+  background: rgba(0,229,160,0.15);
+  border-color: #00e5a0;
+  color: #00e5a0;
+  box-shadow: 0 0 12px rgba(0,229,160,0.2);
+}
+
+/* Text area */
+.text-question {
+  margin-bottom: 18px;
+}
+
+.text-question:last-child { margin-bottom: 0; }
+
+.text-question label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 10px;
+}
+
+.text-question textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  color: #e0e8f0;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+  direction: rtl;
+}
+
+.text-question textarea:focus {
+  outline: none;
+  border-color: rgba(0,229,160,0.4);
+  box-shadow: 0 0 12px rgba(0,229,160,0.1);
+}
+
+.text-question textarea::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+
+/* Radio / Multiple choice */
+.choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.choice-btn {
+  padding: 8px 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choice-btn:hover {
+  background: rgba(0,229,160,0.08);
+  border-color: rgba(0,229,160,0.25);
+}
+
+.choice-btn.active {
+  background: rgba(0,229,160,0.12);
+  border-color: #00e5a0;
+  color: #00e5a0;
+}
+
+/* Name field */
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  color: #e0e8f0;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  direction: rtl;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: rgba(0,229,160,0.4);
+  box-shadow: 0 0 12px rgba(0,229,160,0.1);
+}
+
+.input-field::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+
+/* Submit */
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #00e5a0 0%, #00c98b 100%);
+  border: none;
+  border-radius: 12px;
+  color: #0c1929;
+  font-family: 'Heebo', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 30px;
+  box-shadow: 0 4px 20px rgba(0,229,160,0.25);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0,229,160,0.35);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Thank you */
+.thank-you {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.thank-you .icon { font-size: 64px; margin-bottom: 20px; }
+.thank-you h2 { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.thank-you p { font-size: 16px; color: rgba(255,255,255,0.5); }
+
+/* Small label */
+.field-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 10px;
+}
+
+.optional {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  font-weight: 400;
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="formContainer">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">Colmex × AI</div>
+    <h1>משוב סדנה</h1>
+    <p>נשמח לשמוע מה חשבת — זה עוזר לנו להשתפר</p>
+  </div>
+
+  <!-- Section 1: Rating -->
+  <div class="section">
+    <div class="section-title">דרגו את הנושאים הבאים</div>
+
+    <div class="rating-item">
+      <span class="rating-label">התוכן היה רלוונטי לעבודה שלי</span>
+      <div class="star-group" data-name="relevance"></div>
+    </div>
+
+    <div class="rating-item">
+      <span class="rating-label">קצב ההעברה היה מתאים</span>
+      <div class="star-group" data-name="pace"></div>
+    </div>
+
+    <div class="rating-item">
+      <span class="rating-label">הדוגמאות והתרגולים היו ברורים</span>
+      <div class="star-group" data-name="examples"></div>
+    </div>
+
+    <div class="rating-item">
+      <span class="rating-label">המנחה היה ברור ומעניין</span>
+      <div class="star-group" data-name="instructor"></div>
+    </div>
+
+    <div class="rating-item">
+      <span class="rating-label">הכלים שהוצגו שימושיים בפועל</span>
+      <div class="star-group" data-name="tools"></div>
+    </div>
+
+    <div class="rating-item">
+      <span class="rating-label">יצאתי עם ידע חדש שאוכל ליישם</span>
+      <div class="star-group" data-name="knowledge"></div>
+    </div>
+  </div>
+
+  <!-- Section 2: NPS -->
+  <div class="section">
+    <div class="section-title">עד כמה תמליצו על הסדנה לקולגות?</div>
+    <div class="scale-row" id="npsScale"></div>
+    <div class="scale-labels">
+      <span>בטוח שכן</span>
+      <span>בטוח שלא</span>
+    </div>
+  </div>
+
+  <!-- Section 3: Multiple choice -->
+  <div class="section">
+    <div class="section-title">איזה מפגש היה הכי מועיל עבורך?</div>
+    <div class="choice-group" data-name="best-session">
+      <div class="choice-btn" data-value="1">מפגש 1 — חשיבה יצירתית</div>
+      <div class="choice-btn" data-value="2">מפגש 2 — וידאו ואותנטיות</div>
+      <div class="choice-btn" data-value="3">מפגש 3 — סטנדרט ואוטומציה</div>
+      <div class="choice-btn" data-value="all">כולם באותה מידה</div>
+    </div>
+  </div>
+
+  <!-- Section 4: Open questions -->
+  <div class="section">
+    <div class="section-title">שאלות פתוחות</div>
+
+    <div class="text-question">
+      <label>מה הדבר הכי חשוב שלמדת בסדנה?</label>
+      <textarea placeholder="שתפו אותנו..." id="q_learned"></textarea>
+    </div>
+
+    <div class="text-question">
+      <label>מה הייתם רוצים שנעמיק בו יותר?</label>
+      <textarea placeholder="נושא, כלי, טכניקה..." id="q_deepen"></textarea>
+    </div>
+
+    <div class="text-question">
+      <label>איך אתם מתכננים ליישם את מה שלמדתם? <span class="optional">(אופציונלי)</span></label>
+      <textarea placeholder="תכנית, רעיון, פרויקט..." id="q_apply"></textarea>
+    </div>
+
+    <div class="text-question">
+      <label>הערות נוספות או הצעות לשיפור <span class="optional">(אופציונלי)</span></label>
+      <textarea placeholder="כל מה שעל הלב..." id="q_notes"></textarea>
+    </div>
+  </div>
+
+  <!-- Section 5: Name -->
+  <div class="section">
+    <label class="field-label">שם <span class="optional">(אופציונלי — המשוב אנונימי)</span></label>
+    <input type="text" class="input-field" placeholder="השם שלך" id="userName">
+  </div>
+
+  <button class="submit-btn" onclick="submitFeedback()">שליחת משוב</button>
+</div>
+
+<!-- Thank You -->
+<div class="thank-you" id="thankYou">
+  <div class="icon">🙏</div>
+  <h2>תודה רבה!</h2>
+  <p>המשוב שלך התקבל בהצלחה.<br>נשתמש בו כדי להמשיך להשתפר.</p>
+</div>
+
+<script>
+// Initialize star ratings
+document.querySelectorAll('.star-group').forEach(group => {
+  const name = group.dataset.name;
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('span');
+    star.className = 'star';
+    star.textContent = '★';
+    star.dataset.value = i;
+    star.addEventListener('click', () => {
+      group.dataset.rating = i;
+      group.querySelectorAll('.star').forEach((s, idx) => {
+        s.classList.toggle('active', idx < i);
+      });
+    });
+    star.addEventListener('mouseenter', () => {
+      group.querySelectorAll('.star').forEach((s, idx) => {
+        s.classList.toggle('active', idx < i);
+      });
+    });
+    group.appendChild(star);
+  }
+  group.addEventListener('mouseleave', () => {
+    const rating = parseInt(group.dataset.rating) || 0;
+    group.querySelectorAll('.star').forEach((s, idx) => {
+      s.classList.toggle('active', idx < rating);
+    });
+  });
+});
+
+// Initialize NPS scale (10-1)
+const npsScale = document.getElementById('npsScale');
+for (let i = 10; i >= 1; i--) {
+  const btn = document.createElement('button');
+  btn.className = 'scale-btn';
+  btn.textContent = i;
+  btn.addEventListener('click', () => {
+    npsScale.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    npsScale.dataset.value = i;
+  });
+  npsScale.appendChild(btn);
+}
+
+// Choice buttons
+document.querySelectorAll('.choice-group').forEach(group => {
+  group.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      group.dataset.value = btn.dataset.value;
+    });
+  });
+});
+
+function submitFeedback() {
+  const data = {
+    ratings: {},
+    nps: document.getElementById('npsScale').dataset.value || null,
+    bestSession: document.querySelector('.choice-group[data-name="best-session"]').dataset.value || null,
+    learned: document.getElementById('q_learned').value,
+    deepen: document.getElementById('q_deepen').value,
+    apply: document.getElementById('q_apply').value,
+    notes: document.getElementById('q_notes').value,
+    name: document.getElementById('userName').value,
+    timestamp: new Date().toISOString()
+  };
+
+  document.querySelectorAll('.star-group').forEach(g => {
+    data.ratings[g.dataset.name] = parseInt(g.dataset.rating) || 0;
+  });
+
+  // Disable button while sending
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = 'שולח...';
+  btn.disabled = true;
+
+  // Send to Google Sheets
+  fetch('https://script.google.com/macros/s/AKfycbySRubIeTbicqZ2toMC_d0zWuaypH6eBbX9vuTlGPSiAPtOKNT---1kF8XG02-MJZTwAw/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => {
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('thankYou').style.display = 'block';
+  }).catch(err => {
+    console.error('Error:', err);
+    btn.textContent = 'שליחת משוב';
+    btn.disabled = false;
+    alert('שגיאה בשליחה, נסה שוב');
+  });
+}
+</script>
+
+</body>
+</html>
